@@ -1,0 +1,5 @@
+if(EXISTS "D:/Programmazione/Misc/DES/build/tests/DES_test[1]_tests.cmake")
+  include("D:/Programmazione/Misc/DES/build/tests/DES_test[1]_tests.cmake")
+else()
+  add_test(DES_test_NOT_BUILT DES_test_NOT_BUILT)
+endif()

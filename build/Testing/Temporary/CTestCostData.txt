@@ -1,0 +1,26 @@
+utils.readFile 2 0.0038143
+readFile_test.correctRead 12 0.00097065
+readFile_test.failedOpen 11 0.000649245
+bitsetOp_test.copy_test 39 0.00015849
+readFile_test.correctRead_test 37 0.000177422
+readFile_test.failedOpen_test 37 0.000173719
+bitsetOp_test.circularLeftShift_test 37 0.000163611
+keySchedule_test.subkeyGen_test 0 0
+KeyScheduleTest.PC1_test 15 0.000444253
+KeyScheduleTest.subkeyGen_test 30 0.00020649
+bitsetOp_test.concat_test 32 0.000189516
+DESTest.padding_test 0 0
+padding_test.genPadding_test 24 0.000244225
+bitsetOp_test.permutation_test 21 0.000300533
+DESTest.encrypt_test 6 0.0010667
+DESTest.SBox_test 19 0.000344289
+DESTest.fistel_test 18 0.000362156
+DESTest.ecryptBlock_test 9 0.000680444
+DESTest.round_test 18 0.000336017
+bitsetOp_test.strToBitset_test 10 0.00056968
+bitsetOp_test.bitsetToStr_test 8 0.0007659
+DESTest.encryptBlock_test 4 0.00150047
+DESTest.decryptBlock_test 4 0.00151615
+DESTest.dencrypt_test 3 0.0022204
+padding_test.removePadding_test 1 0.0063456
+---
