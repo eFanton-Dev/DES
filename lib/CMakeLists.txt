@@ -5,9 +5,11 @@ target_include_directories(utils
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_compile_options(utils
-  PRIVATE -Wall -Wextra
-)
+if (MSVC)
+    target_compile_options(utils PRIVATE /W4)
+else()
+    target_compile_options(utils PRIVATE -Wall -Wextra)
+endif()
 
 
 add_library(DESLib 
@@ -26,6 +28,8 @@ target_link_libraries(DESLib
     utils
 )
 
-target_compile_options(DESLib
-  PRIVATE -Wall -Wextra
-)
+if (MSVC)
+    target_compile_options(DESLib PRIVATE /W4)
+else()
+    target_compile_options(DESLib PRIVATE -Wall -Wextra)
+endif()
