@@ -1,3 +1,0 @@
-D:\Programs\CMake\bin\cmake.exe -E rm -f CMakeFiles\DES.dir/objects.a
-D:\Programs\MSYS2\ucrt64\bin\ar.exe qc CMakeFiles\DES.dir/objects.a @CMakeFiles\DES.dir\objects1.rsp
-D:\Programs\MSYS2\ucrt64\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\DES.dir/objects.a -Wl,--no-whole-archive -o DES.exe -Wl,--out-implib,libDES.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\DES.dir\linkLibs.rsp
