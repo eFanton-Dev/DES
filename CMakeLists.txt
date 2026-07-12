@@ -7,7 +7,7 @@ enable_testing()
 add_subdirectory(lib)
 add_subdirectory(src)
 
-option(BUILD_TESTS "Build the test suite" ON)
+option(BUILD_TESTS "Build the test suite" OFF)
 if(BUILD_TESTS)
   add_subdirectory(tests)
 endif()

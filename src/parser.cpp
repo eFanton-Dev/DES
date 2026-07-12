@@ -19,11 +19,18 @@ Command parse(int argc, char* argv[]) {
         return command;
     }
     
+    std::cerr << "Errors:" << std::endl;
+
     bool res;
     for (size_t i = 0; i < argc;)
     {
         res = parse_flags(argv[i]);
         if (res) {
+            i++;
+            continue;
+        }
+        
+        if (i == argc - 1) {
             i++;
             continue;
         }
@@ -34,9 +41,10 @@ Command parse(int argc, char* argv[]) {
             continue;
         }
 
-        std::cerr << "Invalid argument" << std::endl;
-        break;
-    }
+        std::cerr << "\tInvalid argument: '" << argv[i] << "'" << std::endl;
+        command.error = true;
+        i++;
+    }  
 
     return command;
 }
@@ -72,14 +80,7 @@ bool parse_options(char* option, char* value) {
         return 1;
     }
     if (std::strcmp(option, "-k") == 0) {
-        std::string v = value;
-
-        if (v.length() != 8 && v.length() != 17)
-        {
-            std::cerr << "Invalid key size (" << v.length() << ")" << std::endl;
-            return 0;
-        }
-        
+        std::string v = value;      
 
         size_t pos = v.find(',');
         

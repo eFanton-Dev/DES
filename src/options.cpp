@@ -23,12 +23,12 @@ void help_menu() {
     std::cout << usage << flags << options << std::endl;
 }
 
-std::string encrypt_text(const char* key, std::string plaintext) {
+std::string encrypt(const char* key, std::string plaintext) {
     DES des(key);
     return des.encrypt(plaintext);
 }
 
-std::string decrypt_text(const char* key, std::string chipertext) {
+std::string decrypt(const char* key, std::string chipertext) {
     DES des(key);
     return des.decrypt(chipertext);
 }

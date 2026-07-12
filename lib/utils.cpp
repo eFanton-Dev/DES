@@ -1,6 +1,6 @@
 #include "utils.hpp"
 
-const char* util::read_file(std::string path) {
+std::string util::read_file(std::string path) {
     std::fstream source(path, std::ios::in);
     
     if (!source.is_open()) throw "Failed to open " + path;
@@ -10,10 +10,8 @@ const char* util::read_file(std::string path) {
 
     std::stringstream buf;
     buf << source.rdbuf();
-    std::string message = buf.str();
 
-
-    return message.c_str();
+    return buf.str();
 }
 
 // PKCS#5 standard
