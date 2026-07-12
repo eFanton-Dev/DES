@@ -29,18 +29,15 @@ Command parse(int argc, char* argv[]) {
             i++;
             continue;
         }
-        
-        if (i == argc - 1) {
-            i++;
-            continue;
-        }
-        
-        res = parse_options(argv[i], argv[i + 1]);
-        if (res) {
-            i += 2;
-            continue;
-        }
 
+        if (i < argc - 1) {
+            res = parse_options(argv[i], argv[i + 1]);
+            if (res) {
+                i += 2;
+                continue;
+            }
+        }
+        
         std::cerr << "\tInvalid argument: '" << argv[i] << "'" << std::endl;
         command.error = true;
         i++;

@@ -9,17 +9,16 @@ extern std::string decrypt(const char* key, std::string chipertext);
 extern std::string threeDES_encrypt(const char* key1, const char* key2, std::string plaintext);
 extern std::string threeDES_decrypt(const char* key1, const char* key2, std::string plaintext);
 
-void error_hendler(Command &c);
+void validate_command(Command &c);
 
 std::string execute(Command &c) {
-    error_hendler(c);
+    validate_command(c);
 
     if (c.error)
     {
         std::cerr << "See 'DES.exe --help' for more informations" << std::endl;
         return "";
     }
-    
 
     if (c.help) {
         help_menu();
@@ -65,8 +64,8 @@ std::string execute(Command &c) {
     return "";
 }
 
-void error_hendler(Command &c) {
-    
+void validate_command(Command &c) {
+
     if (c.keys[0].empty()) {
         std::cerr << "\tMissing key" << std::endl;
         c.error = true;

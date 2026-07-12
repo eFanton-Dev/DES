@@ -28,7 +28,21 @@ std::string util::gen_padding(const std::string &msg, size_t blocksize) {
 
 std::string util::remove_padding(const std::string &msg) {
     size_t length = msg.length();
+
+    if (length == 0)
+    {
+        std::cerr << "Empty message" << std::endl;
+        return "";
+    }
+
     size_t padding_size = msg[length - 1];
+
+    if (padding_size > length)
+    {
+        std::cerr << "Padding to big" << std::endl;
+        return "";
+    }
+    
 
     return msg.substr(0, length - padding_size);
 }
