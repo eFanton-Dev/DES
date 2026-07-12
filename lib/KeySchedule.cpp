@@ -2,9 +2,8 @@
 
 
 KeySchedule::KeySchedule(BYTES key) {
-    this->key = std::make_unique<std::bitset<64>>(key);
-    
-    //this->key(new std::bitset<64>(key));
+    std::bitset<64> key_bitset = util::str_to_bitset<64>(key);
+    this->key = std::make_unique<std::bitset<64>>(key_bitset);
 }
 
 KeySchedule::KeySchedule(unsigned long long key) {

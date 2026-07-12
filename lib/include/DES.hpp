@@ -6,14 +6,11 @@
 #include <bit>
 
 #include "KeySchedule.hpp"
+#include "common.hpp"
 
 #ifdef TESTING
     class DESTest;
 #endif
-
-#define BYTES const char*
-#define BLOCKSIZE (64 / 8)            //size of a block in bytes
-#define ROUNDNUM 16
 
 class DES
 {

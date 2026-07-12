@@ -5,18 +5,11 @@
 #include <bitset>
 
 #include "utils.hpp"
+#include "common.hpp"
 
 #ifdef TESTING
     class KeyScheduleTest;
 #endif
-
-
-#define BYTES const char*
-
-#define INITKEYLEN 64
-#define KEYLEN 56
-#define SUBKEYLEN 48
-#define ROUNDNUM 16
 
 class KeySchedule
 {
