@@ -73,7 +73,11 @@ bool parse_options(char* option, char* value) {
         return 1;
     }
     if (std::strcmp(option, "-f") == 0) {
-        command.filePath = value;
+        command.inPath = value;
+        return 1;
+    }
+    if (std::strcmp(option, "-o") == 0) {
+        command.outPath = value;
         return 1;
     }
     if (std::strcmp(option, "-k") == 0) {

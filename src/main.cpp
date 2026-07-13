@@ -18,7 +18,15 @@ int main(int argc, char *argv[]) {
 
     Command c = parse(argc - 1, argv + 1);
 
-    std::cout << execute(c) << std::endl;
+    std::string output = execute(c);
+    if (!c.encrypt)
+        output = util::remove_padding(output);
+
+    if (c.outPath.empty())
+        std::cout << output << std::endl;
+    else
+        util::write_file(c.outPath, output);
+    
 
     return 0;
 }

@@ -19,7 +19,9 @@ typedef struct {
     bool threeDES = false;
 
     std::string plaintext;
-    std::string filePath;
+    std::string inPath;
+
+    std::string outPath;
 
     std::string keys[2] = {"", ""};
 } Command;

@@ -1,7 +1,7 @@
 #include "utils.hpp"
 
 std::string util::read_file(std::string path) {
-    std::fstream source(path, std::ios::in);
+    std::fstream source(path, std::ios::binary | std::ios::in);
     
     if (!source.is_open()) throw "Failed to open " + path;
     if (source.bad()) throw "Fatal error: badbit is set.";
@@ -11,7 +11,22 @@ std::string util::read_file(std::string path) {
     std::stringstream buf;
     buf << source.rdbuf();
 
+    source.close();
+
     return buf.str();
+}
+
+void util::write_file(std::string path, std::string content) {
+    std::fstream output(path, std::ios::binary | std::ios::out);
+
+    if (!output.is_open()) throw "Failed to open " + path;
+    if (output.bad()) throw "Fatal error: badbit is set.";
+    if (output.fail()) throw std::string("Error details: ") + std::strerror(errno);
+
+    output.write(content.c_str(), content.length());
+    output.flush();
+
+    output.close();
 }
 
 // PKCS#5 standard

@@ -25,9 +25,9 @@ std::string execute(Command &c) {
         return "";
     }
 
-    if (!c.filePath.empty())
+    if (!c.inPath.empty())
     {
-        std::string content = util::read_file(c.filePath);
+        std::string content = util::read_file(c.inPath);
 
         if (c.encrypt)
         {
@@ -40,6 +40,7 @@ std::string execute(Command &c) {
         if (c.threeDES)
             return threeDES_decrypt(c.keys[0].c_str(), c.keys[1].c_str(), content);
         
+        std::cout << content << std::endl;
         return decrypt(c.keys[0].c_str(), content);
         
     }
@@ -88,13 +89,13 @@ void validate_command(Command &c) {
     }
 
 
-    if (c.plaintext.empty() && c.filePath.empty())
+    if (c.plaintext.empty() && c.inPath.empty())
     {
         std::cerr << "\tMissing text or file" << std::endl;
         c.error = true;
     }
 
-    if (!c.plaintext.empty() && !c.filePath.empty())
+    if (!c.plaintext.empty() && !c.inPath.empty())
     {
         std::cerr << "\tBoth a text and a file had been provided" << std::endl;
         c.error = true;

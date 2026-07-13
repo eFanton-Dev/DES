@@ -12,13 +12,15 @@ void help_menu() {
                             "\t\tUse 3DES instead of DES (needs key2 to be specified)\n";
     std::string options = "Options:\n"\
                             "\t--help\n"\
-                            "\t\tShows informations\n"\
-                            "\t-f <path>\n"\
-                            "\t\tPath of the file containing the text to encrypt/decrypt\n"\
+                            "\t\tDisplay informations\n"\
+                            "\t-f <file>\n"\
+                            "\t\tGet plaintext from <file>\n"\
                             "\t-t <text>\n"\
-                            "\t\tString to encrypt/decrypt\n"\
+                            "\t\tSpecify plaintext\n"\
                             "\t-k <key1>[,<key2>]\n"\
-                            "\t\tKeys to encrypt/decrypt the text (key2 must be specified if --3DES flag is present)\n";
+                            "\t\tKeys to encrypt/decrypt the text (key2 must be specified if --3DES flag is present)\n"\
+                            "\t-o <file>\n"\
+                            "\tPlace the output into <file>";
 
     std::cout << usage << flags << options << std::endl;
 }
