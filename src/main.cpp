@@ -12,6 +12,7 @@ int main(int argc, char *argv[]) {
     if (argc <= 1)
     {
         std::cerr << "Missing arguments" << std::endl;
+        std::cerr << "See 'DES.exe --help' for more informations" << std::endl;
         return 1;
     }
     

@@ -4,15 +4,15 @@
 #include "DES.hpp"
 
 void help_menu() {
-    std::string usage = "Usage: DES.exe [flags] [options] (-f <path> | -t <text>) -k <key1>[,<key2>]\n";
+    std::string usage = "Usage: .\\DES [flags] [options] (-f <path> | -t <text>) -k <key1>[,<key2>]\n";
     std::string flags = "Flags:\n"\
                             "\t(--encrypt | --decrypt)\n"\
                             "\t\tEncrypt/Decrypt text (default --encrypt)\n"\
                             "\t--3DES\n"\
-                            "\t\tUse 3DES instead of DES (needs key2 to be specified)\n";
-    std::string options = "Options:\n"\
+                            "\t\tUse 3DES instead of DES (needs key2 to be specified)\n"
                             "\t--help\n"\
-                            "\t\tDisplay informations\n"\
+                            "\t\tDisplay informations\n";
+    std::string options = "Options:\n"\
                             "\t-f <file>\n"\
                             "\t\tGet plaintext from <file>\n"\
                             "\t-t <text>\n"\
