@@ -10,7 +10,8 @@
 
 namespace util
 {
-    const char* read_file(std::string path);
+    std::string read_file(std::string path);
+    void write_file(std::string path, std::string content);
     std::string gen_padding(const std::string &msg, size_t blocksize);
     std::string remove_padding(const std::string &msg);
 

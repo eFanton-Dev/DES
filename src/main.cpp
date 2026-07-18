@@ -1,36 +1,33 @@
 #include <iostream>
 
 #include "utils.hpp"
+#include "common.hpp"
 #include "DES.hpp"
 
-/**
- * Usage: DES <source file> -o [output file]
- */
+extern Command parse(int argc, char* argv[]);
+extern std::string execute(Command &c);
+
 int main(int argc, char *argv[]) {
-    if (argc < 2)
+
+    if (argc <= 1)
     {
-        std::cout << "Usage: DES <source file> -o [output file]" << std::endl;
+        std::cerr << "Missing arguments" << std::endl;
+        std::cerr << "See 'DES.exe --help' for more informations" << std::endl;
         return 1;
     }
     
-    const char* message;
-    try
-    {
-        message = util::read_file(argv[1]);
-    }
-    catch(const std::string error)
-    {
-        std::cerr << error << '\n';
-    }
 
-    std::cout << message << std::endl;
+    Command c = parse(argc - 1, argv + 1);
 
-    DES des{0xa44598e67a54bf1c};
-    std::string ctext = des.encrypt("Hello World");
+    std::string output = execute(c);
+    if (!c.encrypt)
+        output = util::remove_padding(output);
 
-    std::cout << ctext << std::endl;
-
-    std::cout << des.decrypt(ctext) << std::endl;
+    if (c.outPath.empty())
+        std::cout << output << std::endl;
+    else
+        util::write_file(c.outPath, output);
+    
 
     return 0;
 }
