@@ -20,8 +20,6 @@ int main(int argc, char *argv[]) {
     Command c = parse(argc - 1, argv + 1);
 
     std::string output = execute(c);
-    if (!c.encrypt)
-        output = util::remove_padding(output);
 
     if (c.outPath.empty())
         std::cout << output << std::endl;

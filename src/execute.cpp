@@ -40,7 +40,6 @@ std::string execute(Command &c) {
         if (c.threeDES)
             return threeDES_decrypt(c.keys[0].c_str(), c.keys[1].c_str(), content);
         
-        std::cout << content << std::endl;
         return decrypt(c.keys[0].c_str(), content);
         
     }

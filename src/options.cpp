@@ -27,28 +27,39 @@ void help_menu() {
 
 std::string encrypt(const char* key, std::string plaintext) {
     DES des(key);
+
+    std::string padding = util::gen_padding(plaintext, BLOCKSIZE);
+    plaintext = plaintext + padding;
+
     return des.encrypt(plaintext);
 }
 
 std::string decrypt(const char* key, std::string chipertext) {
     DES des(key);
-    return des.decrypt(chipertext);
+    std::string output = des.decrypt(chipertext);
+
+    return util::remove_padding(output);
 }
 
 std::string threeDES_encrypt(const char* key1, const char* key2, std::string plaintext) {
     DES des1(key1);
     DES des2(key2);
 
-    std::string res = des1.encrypt(plaintext);
-    res = des2.decrypt(res);
-    return des1.encrypt(res);
+    std::string padding = util::gen_padding(plaintext, BLOCKSIZE);
+    plaintext = plaintext + padding;
+
+    std::string output = des1.encrypt(plaintext);
+    output = des2.decrypt(output);
+    return des1.encrypt(output);
 }
 
 std::string threeDES_decrypt(const char* key1, const char* key2, std::string plaintext) {
     DES des1(key1);
     DES des2(key2);
 
-    std::string res = des1.decrypt(plaintext);
-    res = des2.encrypt(res);
-    return des1.decrypt(res);
+    std::string output = des1.decrypt(plaintext);
+    output = des2.encrypt(output);
+    output = des1.decrypt(output);
+
+    return util::remove_padding(output);
 }

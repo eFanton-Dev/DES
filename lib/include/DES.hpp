@@ -127,6 +127,6 @@ public:
     DES(unsigned long long key);
     ~DES();
 
-    std::string encrypt(std::string message);
-    std::string decrypt(std::string message);
+    std::string encrypt(std::string msg);
+    std::string decrypt(std::string msg);
 };

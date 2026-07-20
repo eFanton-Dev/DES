@@ -73,10 +73,7 @@ std::bitset<64> DES::encrypt_block(std::bitset<64> &block) {
 }
 
 
-std::string DES::encrypt(std::string message) {
-    std::string padding = util::gen_padding(message, BLOCKSIZE);
-    std::string msg = message + padding;
-
+std::string DES::encrypt(std::string msg) {
     std::string chipertext;
     for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)
     {
@@ -111,12 +108,12 @@ std::bitset<64> DES::decrypt_block(std::bitset<64> &block) {
     return util::permutation<64, 64>(c_block, inverse_perm_table);
 }
 
-std::string DES::decrypt(std::string message) {
+std::string DES::decrypt(std::string msg) {
     std::string plaintext;
 
-    for (size_t i = 0; i < message.length(); i+=BLOCKSIZE)
+    for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)
     {
-        std::string block = message.substr(i, BLOCKSIZE);
+        std::string block = msg.substr(i, BLOCKSIZE);
 
         std::bitset<64> block_bs = util::str_to_bitset<64>(block);
 
