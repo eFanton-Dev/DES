@@ -9,8 +9,8 @@
 Command command;
 
 Command parse(int argc, char* argv[]);
-bool parse_flags(char* flag);
-bool parse_options(char* option, char* value);
+bool parse_flags(const char* flag);
+bool parse_options(const char* option, const char* value);
 
 
 Command parse(int argc, char* argv[]) {
@@ -46,7 +46,7 @@ Command parse(int argc, char* argv[]) {
     return command;
 }
 
-bool parse_flags(char* flag) {
+bool parse_flags(const char* flag) {
     if (std::strcmp(flag, "--encrypt") == 0) {
         command.encrypt = true;
         return 1;
@@ -63,7 +63,7 @@ bool parse_flags(char* flag) {
     return 0;
 }
 
-bool parse_options(char* option, char* value) {
+bool parse_options(const char* option, const char* value) {
     if (std::strcmp(option, "--help") == 0) {
         command.help = true;
         return 1;

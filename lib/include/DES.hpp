@@ -4,6 +4,7 @@
 #include <string>
 #include <bitset>
 #include <bit>
+#include <functional>
 
 #include "KeySchedule.hpp"
 #include "common.hpp"
@@ -11,6 +12,11 @@
 #ifdef TESTING
     class DESTest;
 #endif
+
+enum class Modes:char {
+    ECB,
+    CBC
+};
 
 class DES
 {
@@ -117,16 +123,24 @@ private:
         22,	11,	4,	25
     };
 
+    void init();
+
     std::bitset<64> encrypt_block(std::bitset<64> &block);
     std::bitset<64> decrypt_block(std::bitset<64> &block);
     std::pair<std::bitset<32>, std::bitset<32>> round(std::bitset<32> &left, std::bitset<32> &right, size_t round);
     std::bitset<32> fistel(const std::bitset<32> &h_block, std::bitset<48> &subkey);
     std::bitset<4> S_box(const std::bitset<6> &input, size_t SBox_num);
+
+    
+    std::string encrypt_ECB(std::string msg);
+    std::string decrypt_ECB(std::string msg);
 public:
     DES(BYTES key);
     DES(unsigned long long key);
     ~DES();
 
-    std::string encrypt(std::string msg);
-    std::string decrypt(std::string msg);
+    void set_mode(Modes mode);
+
+    std::function<std::string(std::string)> encrypt;
+    std::function<std::string(std::string)> decrypt;
 };

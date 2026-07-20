@@ -80,7 +80,11 @@ TEST_F(DESTest, encryptBlock_test) {
 }
 
 TEST_F(DESTest, encrypt_test) {
-    std::string chipertext = des.encrypt("Hello World");
+    std::string plaintext = "Hello World";
+    std::string padding = util::gen_padding(plaintext, BLOCKSIZE);
+    plaintext = plaintext + padding;
+
+    std::string chipertext = des.encrypt(plaintext);
     std::cout << chipertext << std::endl;
 
     const char data[] =

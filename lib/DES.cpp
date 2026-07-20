@@ -1,19 +1,43 @@
 #include "DES.hpp"
 
+ void DES::init() {
+    this->key->gen_subkeys();
+
+    encrypt = [this](std::string msg) { return encrypt_ECB(msg); };
+    decrypt = [this](std::string msg) { return decrypt_ECB(msg); };
+}
+
 DES::DES(BYTES key) {
     this->key = new KeySchedule(key);
 
-    this->key->gen_subkeys();
+    init();
 }
 
 DES::DES(unsigned long long key) {
     this->key = new KeySchedule(key);
 
-    this->key->gen_subkeys();
+    init();
 }
 
 DES::~DES() {
     delete key;
+}
+
+void DES::set_mode(Modes mode) {
+    switch (mode)
+    {
+    case Modes::ECB:
+        encrypt = [this](std::string msg) { return encrypt_ECB(msg); };
+        decrypt = [this](std::string msg) { return decrypt_ECB(msg); };
+        break;
+
+    case Modes::CBC:
+        /* code */
+        break;
+    
+    default:
+        break;
+    }
 }
 
 std::bitset<4> DES::S_box(const std::bitset<6> &input, size_t SBox_num) {
@@ -73,7 +97,7 @@ std::bitset<64> DES::encrypt_block(std::bitset<64> &block) {
 }
 
 
-std::string DES::encrypt(std::string msg) {
+std::string DES::encrypt_ECB(std::string msg) {
     std::string chipertext;
     for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)
     {
@@ -108,7 +132,7 @@ std::bitset<64> DES::decrypt_block(std::bitset<64> &block) {
     return util::permutation<64, 64>(c_block, inverse_perm_table);
 }
 
-std::string DES::decrypt(std::string msg) {
+std::string DES::decrypt_ECB(std::string msg) {
     std::string plaintext;
 
     for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)

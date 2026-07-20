@@ -3,7 +3,7 @@
 #include "utils.hpp"
 
 TEST(readFile_test, correctRead_test) {
-    EXPECT_STREQ(util::read_file("./../../test.txt"), "Hello World");
+    EXPECT_EQ(util::read_file("./../../test.txt"), "Hello World");
 }
 
 TEST(readFile_test, failedOpen_test) {
