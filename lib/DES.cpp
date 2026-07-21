@@ -1,34 +1,45 @@
 #include "DES.hpp"
 
- void DES::init() {
-    this->key->gen_subkeys();
-
-    encrypt = [this](std::string msg) { return encrypt_ECB(msg); };
-    decrypt = [this](std::string msg) { return decrypt_ECB(msg); };
-}
-
 DES::DES(BYTES key) {
     this->key = new KeySchedule(key);
 
-    init();
+    this->key->gen_subkeys();
 }
 
 DES::DES(unsigned long long key) {
     this->key = new KeySchedule(key);
 
-    init();
+    this->key->gen_subkeys();
 }
 
 DES::~DES() {
     delete key;
 }
 
-void DES::set_mode(Modes mode) {
+std::string DES::encrypt(std::string msg, Modes mode, std::string iv) {
     switch (mode)
     {
     case Modes::ECB:
-        encrypt = [this](std::string msg) { return encrypt_ECB(msg); };
-        decrypt = [this](std::string msg) { return decrypt_ECB(msg); };
+        return encrypt_ECB(msg);
+        break;
+
+    case Modes::CBC:
+        if (iv.length() != 8) return "";
+
+        return encrypt_CBC(msg, iv);
+        break;
+    
+    default:
+        return "";
+        break;
+    }
+}
+
+std::string DES::decrypt(std::string msg, Modes mode, std::string iv) {
+    switch (mode)
+    {
+    case Modes::ECB:
+        return decrypt_ECB(msg);
         break;
 
     case Modes::CBC:
@@ -36,6 +47,7 @@ void DES::set_mode(Modes mode) {
         break;
     
     default:
+        return "";
         break;
     }
 }
@@ -142,6 +154,62 @@ std::string DES::decrypt_ECB(std::string msg) {
         std::bitset<64> block_bs = util::str_to_bitset<64>(block);
 
         block_bs = decrypt_block(block_bs);
+
+        block = util::bitset_to_str<64>(block_bs);
+        plaintext += block;
+    }
+
+    return plaintext;
+}
+
+std::string DES::encrypt_CBC(std::string msg, std::string iv) {
+    std::bitset<64> iv_bs = util::str_to_bitset<64>(iv);
+    std::bitset<64> chiperblocks[msg.length() / BLOCKSIZE];
+
+    for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)
+    {
+        std::string block = msg.substr(i, BLOCKSIZE);
+
+        std::bitset<64> block_bs = util::str_to_bitset<64>(block);
+        if (i == 0)
+            block_bs ^= iv_bs;
+        else
+            block_bs ^= chiperblocks[(i / BLOCKSIZE) - 1];
+        
+
+        block_bs = encrypt_block(block_bs);
+
+        chiperblocks[i / BLOCKSIZE] = block_bs;
+    }
+
+    std::string chipertext;
+
+    for (size_t i = 0; i < (msg.length() / BLOCKSIZE); i++)
+        chipertext += util::bitset_to_str<64>(chiperblocks[i]);
+    
+
+    return chipertext;
+}
+
+std::string DES::decrypt_CBC(std::string msg, std::string iv) {
+    std::bitset<64> iv_bs = util::str_to_bitset<64>(iv);
+    std::bitset<64> chiperblocks[msg.length() / BLOCKSIZE];
+    std::string plaintext;
+
+    for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)
+    {
+        std::string block = msg.substr(i, BLOCKSIZE);
+
+        std::bitset<64> block_bs = util::str_to_bitset<64>(block);
+        chiperblocks[i / BLOCKSIZE] = block_bs;
+
+        block_bs = decrypt_block(block_bs);
+
+        if (i == 0)
+            block_bs ^= iv_bs;
+        else
+            block_bs ^= chiperblocks[(i / BLOCKSIZE) - 1];
+        
 
         block = util::bitset_to_str<64>(block_bs);
         plaintext += block;

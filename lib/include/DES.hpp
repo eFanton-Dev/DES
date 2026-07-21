@@ -6,6 +6,7 @@
 #include <bit>
 #include <functional>
 
+
 #include "KeySchedule.hpp"
 #include "common.hpp"
 
@@ -123,7 +124,6 @@ private:
         22,	11,	4,	25
     };
 
-    void init();
 
     std::bitset<64> encrypt_block(std::bitset<64> &block);
     std::bitset<64> decrypt_block(std::bitset<64> &block);
@@ -134,6 +134,9 @@ private:
     
     std::string encrypt_ECB(std::string msg);
     std::string decrypt_ECB(std::string msg);
+
+    std::string encrypt_CBC(std::string msg, std::string iv);
+    std::string decrypt_CBC(std::string msg, std::string iv);
 public:
     DES(BYTES key);
     DES(unsigned long long key);
@@ -141,6 +144,6 @@ public:
 
     void set_mode(Modes mode);
 
-    std::function<std::string(std::string)> encrypt;
-    std::function<std::string(std::string)> decrypt;
+    std::string encrypt(std::string msg, Modes mode = Modes::ECB, std::string iv = "");
+    std::string decrypt(std::string msg, Modes mode = Modes::ECB, std::string iv = "");
 };
