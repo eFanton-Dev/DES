@@ -33,3 +33,26 @@ if (MSVC)
 else()
     target_compile_options(DESLib PRIVATE -Wall -Wextra)
 endif()
+
+
+add_library(App 
+  STATIC 
+    Program.cpp
+)
+
+target_include_directories(App
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(App
+  PUBLIC
+    utils
+    DESLib
+)
+
+if (MSVC)
+    target_compile_options(App PRIVATE /W4)
+else()
+    target_compile_options(App PRIVATE -Wall -Wextra)
+endif()

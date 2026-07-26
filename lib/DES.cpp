@@ -33,6 +33,8 @@ std::string DES::encrypt(std::string msg, Modes mode, std::string iv) {
         return "";
         break;
     }
+
+    return "";
 }
 
 std::string DES::decrypt(std::string msg, Modes mode, std::string iv) {
@@ -43,13 +45,17 @@ std::string DES::decrypt(std::string msg, Modes mode, std::string iv) {
         break;
 
     case Modes::CBC:
-        /* code */
+        if (iv.length() != 8) return "";
+
+        return decrypt_CBC(msg, iv);
         break;
     
     default:
         return "";
         break;
     }
+
+    return "";
 }
 
 std::bitset<4> DES::S_box(const std::bitset<6> &input, size_t SBox_num) {

@@ -14,11 +14,6 @@
     class DESTest;
 #endif
 
-enum class Modes:char {
-    ECB,
-    CBC
-};
-
 class DES
 {
 

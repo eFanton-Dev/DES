@@ -3,9 +3,9 @@
 #include "utils.hpp"
 #include "common.hpp"
 #include "DES.hpp"
+#include "Program.hpp"
 
-extern Command parse(int argc, char* argv[]);
-extern std::string execute(Command &c);
+extern void parse(int argc, char* argv[]);
 
 int main(int argc, char *argv[]) {
 
@@ -16,15 +16,16 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     
+    Program& app = Program::getInstance();
 
-    Command c = parse(argc - 1, argv + 1);
+    parse(argc - 1, argv + 1);
 
-    std::string output = execute(c);
+    std::string output = app.execute();
 
-    if (c.outPath.empty())
+    if (app.outFile.empty())
         std::cout << output << std::endl;
     else
-        util::write_file(c.outPath, output);
+        util::write_file(app.outFile, output);
     
 
     return 0;

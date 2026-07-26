@@ -4,19 +4,20 @@
 
 #include "utils.hpp"
 #include "common.hpp"
+#include "Program.hpp"
 
 
-Command command;
-
-Command parse(int argc, char* argv[]);
+void parse(int argc, char* argv[]);
 bool parse_flags(const char* flag);
 bool parse_options(const char* option, const char* value);
 
+Program& app = Program::getInstance();
 
-Command parse(int argc, char* argv[]) {
+
+void parse(int argc, char* argv[]) {
     if (argc < 1) {
-        command.error = true;
-        return command;
+        app.error = true;
+        return;
     }
     
     std::cerr << "Errors:" << std::endl;
@@ -39,24 +40,28 @@ Command parse(int argc, char* argv[]) {
         }
         
         std::cerr << "\tInvalid argument: '" << argv[i] << "'" << std::endl;
-        command.error = true;
+        app.error = true;
         i++;
     }  
 
-    return command;
+    return;
 }
 
 bool parse_flags(const char* flag) {
+    if (std::strcmp(flag, "--help") == 0) {
+        app.help = true;
+        return 1;
+    }
     if (std::strcmp(flag, "--encrypt") == 0) {
-        command.encrypt = true;
+        app.encryptFlag = true;
         return 1;
     }
     if (std::strcmp(flag, "--decrypt") == 0) {
-        command.encrypt = false;
+        app.encryptFlag = false;
         return 1;
     }
     if (std::strcmp(flag, "--3DES") == 0) {
-        command.threeDES = true;
+        app.threeDES = true;
         return 1;
     }
 
@@ -64,20 +69,16 @@ bool parse_flags(const char* flag) {
 }
 
 bool parse_options(const char* option, const char* value) {
-    if (std::strcmp(option, "--help") == 0) {
-        command.help = true;
-        return 1;
-    }
     if (std::strcmp(option, "-t") == 0) {
-        command.plaintext = value;
+        app.text = value;
         return 1;
     }
     if (std::strcmp(option, "-f") == 0) {
-        command.inPath = value;
+        app.inFile = value;
         return 1;
     }
     if (std::strcmp(option, "-o") == 0) {
-        command.outPath = value;
+        app.outFile = value;
         return 1;
     }
     if (std::strcmp(option, "-k") == 0) {
@@ -85,10 +86,26 @@ bool parse_options(const char* option, const char* value) {
 
         size_t pos = v.find(',');
         
-        command.keys[0] = v.substr(0, pos);
-        command.keys[1] = pos != std::string::npos ? v.substr(pos + 1) : "";
+        app.keys[0] = v.substr(0, pos);
+        app.keys[1] = pos != std::string::npos ? v.substr(pos + 1) : "";
         return 1;
     }
+    if (std::strcmp(option, "-m") == 0) {
+        auto iter = ENUMSTRING.find(value);
+        if (iter == ENUMSTRING.end()) {
+            std::cerr << "\tInvalid mode" << std::endl;
+            app.error = true;
+            return 1;
+        }
+        
+
+        app.mode = ENUMSTRING.at(value);
+        return 1;
+    }
+    if (std::strcmp(option, "--iv") == 0) {
+        app.iv = value;
+        return 1;
+    }    
 
     return 0;
 }

@@ -37,3 +37,5 @@ The executable will be placed inside `src`.
 | `-t <text>` | Specify plaintext |
 | `-k <key1>[,<key2>]` | Keys to encrypt/decrypt the text (*<key2\>* must be specified if `--3DES` flag is present) |
 | `-o <file>` | Place the output into *<file\>* |
+| `-m <mode>` | Mode of operation for the encryption/decryption (default ECB) |
+| `--iv <iv>` | Initialization vector for CBC mode of operation |
