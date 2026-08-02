@@ -14,7 +14,8 @@ constexpr size_t BLOCKSIZE = 64 / 8;            //size of a block in bytes
 
 enum class Modes:char {
     ECB,
-    CBC
+    CBC,
+    CTR
 };
 
 const std::map<std::string, Modes> ENUMSTRING = {

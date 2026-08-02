@@ -132,6 +132,9 @@ private:
 
     std::string encrypt_CBC(std::string msg, std::string iv);
     std::string decrypt_CBC(std::string msg, std::string iv);
+
+    std::string encrypt_CTR(std::string msg, unsigned long ctr_start);
+    std::string decrypt_CTR(std::string msg, unsigned long ctr_start);
 public:
     DES(BYTES key);
     DES(unsigned long long key);
