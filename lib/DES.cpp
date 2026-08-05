@@ -1,5 +1,7 @@
 #include "DES.hpp"
 
+// public:
+
 DES::DES(BYTES key) {
     this->key = new KeySchedule(key);
 
@@ -16,47 +18,71 @@ DES::~DES() {
     delete key;
 }
 
-std::string DES::encrypt(std::string msg, Modes mode, std::string iv) {
+std::string DES::encrypt(
+        std::string msg,
+        std::variant<std::string, unsigned long> param,
+        Modes mode
+) {
     switch (mode)
     {
     case Modes::ECB:
         return encrypt_ECB(msg);
-        break;
 
-    case Modes::CBC:
-        if (iv.length() != 8) return "";
+    case Modes::CBC: {
+        const std::string* iv = std::get_if<std::string>(&param);
+        if (!iv) return "";
+        if (iv->length() != 8) return "";
 
-        return encrypt_CBC(msg, iv);
-        break;
+        return encrypt_CBC(msg, *iv);
+    }
+
+    case Modes::CTR: {
+        const unsigned long* ctr = std::get_if<unsigned long>(&param);
+        if (!ctr) return "";
+
+        return encrypt_CTR(msg, *ctr);
+    }
     
     default:
         return "";
-        break;
     }
 
     return "";
 }
 
-std::string DES::decrypt(std::string msg, Modes mode, std::string iv) {
+std::string DES::decrypt(
+        std::string msg,
+        std::variant<std::string, unsigned long> param,
+        Modes mode
+) {
     switch (mode)
     {
     case Modes::ECB:
         return decrypt_ECB(msg);
-        break;
 
-    case Modes::CBC:
-        if (iv.length() != 8) return "";
+    case Modes::CBC: {
+        const std::string* iv = std::get_if<std::string>(&param);
+        if (!iv) return "";
+        if (iv->length() != 8) return "";
 
-        return decrypt_CBC(msg, iv);
-        break;
+        return decrypt_CBC(msg, *iv);
+    }
+
+    case Modes::CTR: {
+        const unsigned long* ctr = std::get_if<unsigned long>(&param);
+        if (!ctr) return "";
+
+        return decrypt_CTR(msg, *ctr);
+    }
     
     default:
         return "";
-        break;
     }
 
     return "";
 }
+
+//private:
 
 std::bitset<4> DES::S_box(const std::bitset<6> &input, size_t SBox_num) {
     size_t y = (input.to_ulong() & 0b000001) + ((input >> 4).to_ulong() & 0b000010);
@@ -263,6 +289,8 @@ std::string DES::decrypt_CTR(std::string msg, unsigned long ctr_start) {
 
         block = util::bitset_to_str<64>(block_bs);
         plaintext += block;
+
+        counter++;
     }
 
     return plaintext;

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(DataEncryptionStandard VERSION 2.0 LANGUAGES CXX)
+project(DataEncryptionStandard VERSION 3.0 LANGUAGES CXX)
+
+set (CMAKE_CXX_STANDARD 17)
 
 enable_testing() 
 

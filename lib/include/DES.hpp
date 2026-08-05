@@ -5,7 +5,7 @@
 #include <bitset>
 #include <bit>
 #include <functional>
-
+#include <variant>
 
 #include "KeySchedule.hpp"
 #include "common.hpp"
@@ -142,6 +142,15 @@ public:
 
     void set_mode(Modes mode);
 
-    std::string encrypt(std::string msg, Modes mode = Modes::ECB, std::string iv = "");
-    std::string decrypt(std::string msg, Modes mode = Modes::ECB, std::string iv = "");
+    std::string encrypt(
+        std::string msg,
+        std::variant<std::string, unsigned long> param,
+        Modes mode
+    );
+
+    std::string decrypt(
+        std::string msg,
+        std::variant<std::string, unsigned long> param,
+        Modes mode
+    );
 };

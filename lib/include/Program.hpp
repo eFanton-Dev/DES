@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <variant>
 
 #include "DES.hpp"
 
@@ -35,8 +36,7 @@ public:
     std::string outFile;
 
     std::string keys[2] = {"", ""};
-    std::string iv;
-
+    std::variant<std::string, unsigned long> param;
     
     Program(const Program&) = delete;
     Program& operator=(const Program&) = delete;

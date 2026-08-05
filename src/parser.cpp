@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <cstdlib>
 
 #include "utils.hpp"
 #include "common.hpp"
@@ -103,9 +104,14 @@ bool parse_options(const char* option, const char* value) {
         return 1;
     }
     if (std::strcmp(option, "--iv") == 0) {
-        app.iv = value;
+        app.param = value;
         return 1;
-    }    
+    }
+    if (std::strcmp(option, "--ctr") == 0) {
+        unsigned long val = std::strtoul(value, NULL, 10);
+        app.param = val;
+        return 1;
+    }
 
     return 0;
 }
