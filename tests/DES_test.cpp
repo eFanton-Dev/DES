@@ -43,6 +43,14 @@ protected:
         return des.decrypt_CBC(msg, iv);
     }
 
+    std::string encrypt_PCBC(std::string msg, std::string iv) {
+        return des.encrypt_PCBC(msg, iv);
+    }
+
+    std::string decrypt_PCBC(std::string msg, std::string iv) {
+        return des.decrypt_PCBC(msg, iv);
+    }
+
     std::string encrypt_CTR(std::string msg, unsigned long ctr_start) {
         return des.encrypt_CTR(msg, iv);
     }
@@ -135,6 +143,22 @@ TEST_F(DESTest, encryptCBC_test) {
     ASSERT_EQ(chipertext, expected);
 }
 
+TEST_F(DESTest, encryptPCBC_test) {
+    std::string plaintext = "Hello World";
+    std::string padding = util::gen_padding(plaintext, BLOCKSIZE);
+    plaintext = plaintext + padding;
+
+    std::string chipertext = encrypt_PCBC(plaintext, "12345678");
+    std::cout << chipertext << std::endl;
+
+    const char data[] =
+    "\x12\xA1\x3F\xE8\xA6\x79\x9D\x5A\x16\x5F\x62\xD2\xE1\xF5\x0A\x65";
+
+    std::string expected(data, sizeof(data) - 1);
+
+    ASSERT_EQ(chipertext, expected);
+}
+
 TEST_F(DESTest, encryptCTR_test) {
     std::string plaintext = "Hello World";
     std::string padding = util::gen_padding(plaintext, BLOCKSIZE);
@@ -178,6 +202,19 @@ TEST_F(DESTest, dencryptCBC_test) {
 
     std::string chipertext(data, sizeof(data) - 1);
     std::string plaintext = decrypt_CBC(chipertext, "12345678");
+    std::cout << plaintext << std::endl;
+
+    std::string expected = "Hello World\x05\x05\x05\x05\x05";
+
+    ASSERT_EQ(plaintext, expected);
+}
+
+TEST_F(DESTest, dencryptPCBC_test) {
+    const char data[] =
+    "\x12\xa1\x3f\xe8\xa6\x79\x9d\x5a\x16\x5f\x62\xd2\xe1\xf5\x0a\x65";
+
+    std::string chipertext(data, sizeof(data) - 1);
+    std::string plaintext = decrypt_PCBC(chipertext, "12345678");
     std::cout << plaintext << std::endl;
 
     std::string expected = "Hello World\x05\x05\x05\x05\x05";

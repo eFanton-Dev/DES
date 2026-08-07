@@ -19,9 +19,9 @@ void Program::help_menu() {
                             "\t-o <file>\n"\
                             "\tPlace the output into <file>\n"\
                             "\t-m <mode>\n"\
-                            "\t\tMode of operation for the encryption/decryption: ECB (default), CBC, CTR\n"\
+                            "\t\tMode of operation for the encryption/decryption: ECB (default), CBC, PCBC, CTR\n"\
                             "\t--iv <iv>\n"\
-                            "\t\tInitialization vector for CBC mode of operation\n"\
+                            "\t\tInitialization vector for CBC/PCBC mode of operation\n"\
                             "\t--ctr <ctr_start>\n"\
                             "\t\tDefine the start value for the counter in CTR mode of operation\n";
 
@@ -105,13 +105,23 @@ void Program::validate_command() {
         error = true;
     }
 
-    /*
-    if (iv.length() != 8)
+    if (
+        (mode == Modes::CBC || mode == Modes::PCBC) 
+        && 
+        (!std::holds_alternative<std::string>(param) || std::get<std::string>(param).length() != 8)
+    )
     {
-        std::cerr << "\tInvalid size for iv(" << iv.length() << ")" << std::endl;
+        std::cerr << "\tA valid iv must be provided (expected lenght: 8)" << std::endl;
         error = true;
     }
-    */
+
+    if (
+        mode == Modes::CTR && !std::holds_alternative<unsigned long>(param)
+    )
+    {
+        std::cerr << "\tAn starting value for the counter must be provided" << std::endl;
+        error = true;
+    }
     
 
     if (!error)
