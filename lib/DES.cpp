@@ -175,53 +175,44 @@ std::string DES::encrypt_ECB(std::string msg) {
 }
 
 std::string DES::encrypt_CBC(std::string msg, std::string iv) {
-    std::bitset<64> iv_bs = util::str_to_bitset<64>(iv);
-    std::bitset<64> chiperblocks[msg.length() / BLOCKSIZE];
-
-    for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)
-    {
-        std::string block = msg.substr(i, BLOCKSIZE);
-
-        std::bitset<64> block_bs = util::str_to_bitset<64>(block);
-        if (i == 0)
-            block_bs ^= iv_bs;
-        else
-            block_bs ^= chiperblocks[(i / BLOCKSIZE) - 1];
-        
-
-        block_bs = encrypt_block(block_bs);
-
-        chiperblocks[i / BLOCKSIZE] = block_bs;
-    }
+    std::bitset<64> propagation[(msg.length() / BLOCKSIZE) + 1];
+    propagation[0] = util::str_to_bitset<64>(iv);
 
     std::string chipertext;
 
-    for (size_t i = 0; i < (msg.length() / BLOCKSIZE); i++)
-        chipertext += util::bitset_to_str<64>(chiperblocks[i]);
-    
+    for (size_t i = 0; i < msg.length() / BLOCKSIZE; i++)
+    {
+        std::string block = msg.substr(i * BLOCKSIZE, BLOCKSIZE);
+
+        std::bitset<64> block_bs = util::str_to_bitset<64>(block);
+        block_bs ^= propagation[i];
+
+        block_bs = encrypt_block(block_bs);
+
+        propagation[i + 1] = block_bs;
+        chipertext += util::bitset_to_str<64>(block_bs);
+    }
 
     return chipertext;
 }
 
 std::string DES::encrypt_PCBC(std::string msg, std::string iv) {
-    std::bitset<64> iv_bs = util::str_to_bitset<64>(iv);
-    std::bitset<64> chiperblocks[msg.length() / BLOCKSIZE];
+    std::bitset<64> propagation[(msg.length() / BLOCKSIZE) + 1];
+    propagation[0] = util::str_to_bitset<64>(iv);
+
     std::string chipertext;
 
-    for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)
+    for (size_t i = 0; i < msg.length() / BLOCKSIZE; i++)
     {
-        std::string block = msg.substr(i, BLOCKSIZE);
+        std::string block = msg.substr(i * BLOCKSIZE, BLOCKSIZE);
 
         std::bitset<64> plainblock_bs = util::str_to_bitset<64>(block);
         std::bitset<64> block_bs = plainblock_bs;
-        if (i == 0)
-            block_bs ^= iv_bs;
-        else
-            block_bs ^= chiperblocks[(i / BLOCKSIZE) - 1];
+        block_bs ^= propagation[i];
         
         block_bs = encrypt_block(block_bs);
 
-        chiperblocks[i / BLOCKSIZE] = block_bs ^ plainblock_bs;
+        propagation[i + 1] = block_bs ^ plainblock_bs;
         chipertext += util::bitset_to_str<64>(block_bs);
     }
 
@@ -288,24 +279,21 @@ std::string DES::decrypt_ECB(std::string msg) {
 }
 
 std::string DES::decrypt_CBC(std::string msg, std::string iv) {
-    std::bitset<64> iv_bs = util::str_to_bitset<64>(iv);
-    std::bitset<64> chiperblocks[msg.length() / BLOCKSIZE];
+    std::bitset<64> propagation[(msg.length() / BLOCKSIZE) + 1];
+    propagation[0] = util::str_to_bitset<64>(iv);
+    
     std::string plaintext;
 
-    for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)
+    for (size_t i = 0; i < msg.length() / BLOCKSIZE; i++)
     {
-        std::string block = msg.substr(i, BLOCKSIZE);
+        std::string block = msg.substr(i * BLOCKSIZE, BLOCKSIZE);
 
         std::bitset<64> block_bs = util::str_to_bitset<64>(block);
-        chiperblocks[i / BLOCKSIZE] = block_bs;
+        propagation[i + 1] = block_bs;
 
         block_bs = decrypt_block(block_bs);
 
-        if (i == 0)
-            block_bs ^= iv_bs;
-        else
-            block_bs ^= chiperblocks[(i / BLOCKSIZE) - 1];
-        
+        block_bs ^= propagation[i];
 
         block = util::bitset_to_str<64>(block_bs);
         plaintext += block;
@@ -315,27 +303,24 @@ std::string DES::decrypt_CBC(std::string msg, std::string iv) {
 }
 
 std::string DES::decrypt_PCBC(std::string msg, std::string iv) {
-    std::bitset<64> iv_bs = util::str_to_bitset<64>(iv);
-    std::bitset<64> chiperblocks[msg.length() / BLOCKSIZE];
+    std::bitset<64> propagation[(msg.length() / BLOCKSIZE) + 1];
+    propagation[0] = util::str_to_bitset<64>(iv);
+    
     std::string plaintext;
 
-    for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)
+    for (size_t i = 0; i < msg.length() / BLOCKSIZE; i++)
     {
-        std::string block = msg.substr(i, BLOCKSIZE);
+        std::string block = msg.substr(i * BLOCKSIZE, BLOCKSIZE);
 
         std::bitset<64> chiperblock_bs = util::str_to_bitset<64>(block);
         std::bitset<64> block_bs = decrypt_block(chiperblock_bs);
-
-        if (i == 0)
-            block_bs ^= iv_bs;
-        else
-            block_bs ^= chiperblocks[(i / BLOCKSIZE) - 1];
+        block_bs ^= propagation[i];
         
 
         block = util::bitset_to_str<64>(block_bs);
         plaintext += block;
 
-        chiperblocks[i / BLOCKSIZE] = block_bs ^ chiperblock_bs;
+        propagation[i + 1] = block_bs ^ chiperblock_bs;
     }
 
     return plaintext;
