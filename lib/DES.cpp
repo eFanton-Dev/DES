@@ -139,10 +139,10 @@ std::pair<std::bitset<32>, std::bitset<32>> DES::round(
 }
 
 std::bitset<64> DES::encrypt_block(std::bitset<64> &block) {
-    block = util::permutation<64, 64>(block, perm_table); //initial permutation
+    std::bitset<64> pm_block = util::permutation<64, 64>(block, perm_table); //initial permutation
 
-    std::bitset<32> right = util::copy<64, 32>(block, 0);
-    std::bitset<32> left = util::copy<64, 32>(block, 32);
+    std::bitset<32> right = util::copy<64, 32>(pm_block, 0);
+    std::bitset<32> left = util::copy<64, 32>(pm_block, 32);
 
     for (size_t i = 0; i < ROUNDNUM; i++)
     {
@@ -206,6 +206,7 @@ std::string DES::encrypt_CBC(std::string msg, std::string iv) {
 std::string DES::encrypt_PCBC(std::string msg, std::string iv) {
     std::bitset<64> iv_bs = util::str_to_bitset<64>(iv);
     std::bitset<64> chiperblocks[msg.length() / BLOCKSIZE];
+    std::string chipertext;
 
     for (size_t i = 0; i < msg.length(); i+=BLOCKSIZE)
     {
@@ -218,17 +219,11 @@ std::string DES::encrypt_PCBC(std::string msg, std::string iv) {
         else
             block_bs ^= chiperblocks[(i / BLOCKSIZE) - 1];
         
+        block_bs = encrypt_block(block_bs);
 
-        std::bitset<64> chiperblock_bs = encrypt_block(block_bs);
-
-        chiperblocks[i / BLOCKSIZE] = chiperblock_bs ^ plainblock_bs;
+        chiperblocks[i / BLOCKSIZE] = block_bs ^ plainblock_bs;
+        chipertext += util::bitset_to_str<64>(block_bs);
     }
-
-    std::string chipertext;
-
-    for (size_t i = 0; i < (msg.length() / BLOCKSIZE); i++)
-        chipertext += util::bitset_to_str<64>(chiperblocks[i]);
-    
 
     return chipertext;
 }
@@ -257,10 +252,10 @@ std::string DES::encrypt_CTR(std::string msg, unsigned long ctr_start) {
 }
 
 std::bitset<64> DES::decrypt_block(std::bitset<64> &block) {
-    block = util::permutation<64, 64>(block, perm_table); //initial permutation
+    std::bitset<64> pm_block = util::permutation<64, 64>(block, perm_table); //initial permutation
 
-    std::bitset<32> right = util::copy<64, 32>(block, 0);
-    std::bitset<32> left = util::copy<64, 32>(block, 32);
+    std::bitset<32> right = util::copy<64, 32>(pm_block, 0);
+    std::bitset<32> left = util::copy<64, 32>(pm_block, 32);
 
     for (int i = ROUNDNUM - 1; i >= 0; i--)    
     {
@@ -329,7 +324,6 @@ std::string DES::decrypt_PCBC(std::string msg, std::string iv) {
         std::string block = msg.substr(i, BLOCKSIZE);
 
         std::bitset<64> chiperblock_bs = util::str_to_bitset<64>(block);
-
         std::bitset<64> block_bs = decrypt_block(chiperblock_bs);
 
         if (i == 0)

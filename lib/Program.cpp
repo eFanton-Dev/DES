@@ -43,8 +43,6 @@ std::string Program::decrypt() {
 
     std::string output = des1->decrypt(text, param, mode);
 
-    std::cout << output << std::endl;
-
     return util::remove_padding(output);
 }
 
