@@ -133,6 +133,9 @@ private:
     std::string encrypt_CBC(std::string msg, std::string iv);
     std::string decrypt_CBC(std::string msg, std::string iv);
 
+    std::string encrypt_PCBC(std::string msg, std::string iv); //TODO: create test
+    std::string decrypt_PCBC(std::string msg, std::string iv); //TODO: create test
+
     std::string encrypt_CTR(std::string msg, unsigned long ctr_start);
     std::string decrypt_CTR(std::string msg, unsigned long ctr_start);
 public:
