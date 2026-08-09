@@ -16,11 +16,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    std::bitset<64> set{0xa44598e67a54bf1c};
-    std::stringstream res;
-    res << std::hex << std::uppercase << set.to_ullong();
-    std::cout << res.str() << std::endl;
-    
     Program& app = Program::getInstance();
 
     parse(argc - 1, argv + 1);
