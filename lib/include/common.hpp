@@ -16,6 +16,7 @@ enum class Modes:char {
     ECB,
     CBC,
     PCBC,
+    OFB,
     CTR
 };
 
@@ -23,5 +24,6 @@ const std::map<std::string, Modes> ENUMSTRING = {
     {"ECB", Modes::ECB},
     {"CBC", Modes::CBC},
     {"PCBC", Modes::PCBC},
+    {"OFB", Modes::OFB},
     {"CTR", Modes::CTR}
 };

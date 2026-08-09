@@ -19,9 +19,9 @@ void Program::help_menu() {
                             "\t-o <file>\n"\
                             "\tPlace the output into <file>\n"\
                             "\t-m <mode>\n"\
-                            "\t\tMode of operation for the encryption/decryption: ECB (default), CBC, PCBC, CTR\n"\
+                            "\t\tMode of operation for the encryption/decryption: ECB (default), CBC, PCBC, OFB, CTR\n"\
                             "\t--iv <iv>\n"\
-                            "\t\tInitialization vector for CBC/PCBC mode of operation\n"\
+                            "\t\tInitialization vector for CBC, PCBC or OFB mode of operation\n"\
                             "\t--ctr <ctr_start>\n"\
                             "\t\tDefine the start value for the counter in CTR mode of operation\n";
 

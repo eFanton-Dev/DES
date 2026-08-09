@@ -37,6 +37,6 @@ The executable will be placed inside `src`.
 | `-t <text>` | Specify plaintext |
 | `-k <key1>[,<key2>]` | Keys to encrypt/decrypt the text (*<key2\>* must be specified if `--3DES` flag is present) |
 | `-o <file>` | Place the output into *<file\>* |
-| `-m <mode>` | Mode of operation for the encryption/decryption: ECB (default), CBC, PCBC, CTR |
-| `--iv <iv>` | Initialization vector for CBC/PCBC mode of operation |
+| `-m <mode>` | Mode of operation for the encryption/decryption: ECB (default), CBC, PCBC, OFB, CTR |
+| `--iv <iv>` | Initialization vector for CBC, PCBC or OFB mode of operation |
 | `--ctr <ctr_start>` | Define the start value for the counter in CTR mode of operation |

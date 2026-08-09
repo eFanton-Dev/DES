@@ -98,7 +98,6 @@ bool parse_options(const char* option, const char* value) {
             app.error = true;
             return 1;
         }
-        
 
         app.mode = ENUMSTRING.at(value);
         return 1;

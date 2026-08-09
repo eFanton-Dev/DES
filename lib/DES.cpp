@@ -44,6 +44,14 @@ std::string DES::encrypt(
         return encrypt_PCBC(msg, *iv);
     }
 
+    case Modes::OFB: {
+        const std::string* iv = std::get_if<std::string>(&param);
+        if (!iv) return "";
+        if (iv->length() != 8) return "";
+
+        return encrypt_OFB(msg, *iv);
+    }
+
     case Modes::CTR: {
         const unsigned long* ctr = std::get_if<unsigned long>(&param);
         if (!ctr) return "";
@@ -82,6 +90,14 @@ std::string DES::decrypt(
         if (iv->length() != 8) return "";
 
         return decrypt_PCBC(msg, *iv);
+    }
+
+    case Modes::OFB: {
+        const std::string* iv = std::get_if<std::string>(&param);
+        if (!iv) return "";
+        if (iv->length() != 8) return "";
+
+        return decrypt_OFB(msg, *iv);
     }
 
     case Modes::CTR: {
@@ -219,6 +235,27 @@ std::string DES::encrypt_PCBC(std::string msg, std::string iv) {
     return chipertext;
 }
 
+std::string DES::encrypt_OFB(std::string msg, std::string iv) {
+    std::bitset<64> propagation[(msg.length() / BLOCKSIZE) + 1];
+    propagation[0] = util::str_to_bitset<64>(iv);
+
+    std::string chipertext;
+
+    for (size_t i = 0; i < msg.length() / BLOCKSIZE; i++)
+    {
+        std::string plainblock = msg.substr(i * BLOCKSIZE, BLOCKSIZE);
+
+        std::bitset<64> plainblock_bs = util::str_to_bitset<64>(plainblock);
+
+        std::bitset<64> block_bs = encrypt_block(propagation[i]);
+
+        propagation[i + 1] = block_bs;
+        chipertext += util::bitset_to_str<64>(block_bs ^ plainblock_bs);
+    }
+
+    return chipertext;
+}
+
 std::string DES::encrypt_CTR(std::string msg, unsigned long ctr_start) {
     std::string chipertext;
     unsigned long counter = ctr_start;
@@ -321,6 +358,27 @@ std::string DES::decrypt_PCBC(std::string msg, std::string iv) {
         plaintext += block;
 
         propagation[i + 1] = block_bs ^ chiperblock_bs;
+    }
+
+    return plaintext;
+}
+
+std::string DES::decrypt_OFB(std::string msg, std::string iv) {
+    std::bitset<64> propagation[(msg.length() / BLOCKSIZE) + 1];
+    propagation[0] = util::str_to_bitset<64>(iv);
+
+    std::string plaintext;
+
+    for (size_t i = 0; i < msg.length() / BLOCKSIZE; i++)
+    {
+        std::string chiperblock = msg.substr(i * BLOCKSIZE, BLOCKSIZE);
+
+        std::bitset<64> chiperblock_bs = util::str_to_bitset<64>(chiperblock);
+
+        std::bitset<64> block_bs = encrypt_block(propagation[i]);
+
+        propagation[i + 1] = block_bs;
+        plaintext += util::bitset_to_str<64>(block_bs ^ chiperblock_bs);
     }
 
     return plaintext;
